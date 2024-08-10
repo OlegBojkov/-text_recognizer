@@ -1,0 +1,70 @@
+# OCR с использованием shiftlab_ocr и визуализация результатов
+
+Этот проект демонстрирует процесс извлечения текста с изображений с использованием библиотеки `shiftlab_ocr`, а также визуализацию отдельных фрагментов изображения.
+
+## Установка
+
+1. Клонируйте репозиторий `shiftlab_ocr`:
+
+  ```bash
+  git clone https://github.com/conwerner/shiftlab_ocr.git
+  ```
+   
+2. Установите необходимые зависимости:
+
+  ```bash
+  pip install -r shiftlab_ocr/requirements.txt
+  ```
+
+## Загрузка изображения
+
+Чтобы загрузить изображение с Google Drive, выполните следующий код:
+  ```bash
+  import gdown
+  
+  file_id = '1OSYKZ_b0Qz9bmPjHEJCoz9N74pp4IK2e'
+  
+  download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+  output_file = '/content/test.jpg'
+  gdown.download(download_url, output_file, quiet=False)
+  ```
+
+## Открытие и отображение изображения
+После загрузки откройте изображение с помощью библиотеки Pillow:
+  ```bash
+  from PIL import Image
+  
+  img = Image.open('/content/test.jpg')
+  img.show()
+  ```
+
+## Извлечение текста с изображения
+Для извлечения текста с изображения используйте библиотеку shiftlab_ocr:
+  ```bash
+  from shiftlab_ocr.doc2text import Reader
+  
+  reader = Reader()
+  result = reader.doc2text("/content/test.jpg")
+  ```
+
+## Визуализация фрагментов изображения
+Вы можете визуализировать обработанные фрагменты изображения с помощью matplotlib. В следующем примере отображается сетка из 48 фрагментов:
+  ```bash
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  
+  images = result[1]
+  N = 48  # количество отображаемых фрагментов
+  n = int(N**(0.5))
+  k = 0
+  f, axarr = plt.subplots(n, n, figsize=(10, 10))
+  for i in range(n):
+      for j in range(n):
+          axarr[i, j].imshow(images[k].img)
+          k += 1
+  f.show()
+  ```
+Вы можете изменять параметры, такие как N (количество отображаемых фрагментов), для настройки визуализации в соответствии с вашими потребностями.
+
+## Заключение
+Этот проект предоставляет простой способ извлечения текста с изображений и визуализации результатов. Используйте данный код как основу для создания собственных приложений по распознаванию текста и анализа изображений.
